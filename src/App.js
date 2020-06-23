@@ -1,26 +1,58 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
+import api from './services/api';
 
 import "./styles.css";
 
 function App() {
+
+  const [repositories, setRepositories] = useState([]);
+
+  useEffect(() => {
+    api.get('/repositories').then(response => {
+      setRepositories(response.data);
+    })
+  }, []);
+
+  // Adicionar repositório
   async function handleAddRepository() {
-    // TODO
+     const response = await api.post('/repositories', {
+       title: `New Project nº ${Date.now()}`,
+       url: 'http://github.com/ficticiouslink',
+       techs: ['React', 'ReactJS']
+     });
+
+     const newRepository = response.data;
+
+     setRepositories([...repositories, newRepository]);
   }
 
+  // Remover repositório
   async function handleRemoveRepository(id) {
-    // TODO
+    const response = await api.delete(`/repositories/${id}`);
+
+    // Se a remoção foi bem sucedida, o back retorna o HTTP Code 204 (no content)
+    if(response.status == 204){
+      const repositoryIndex = repositories.findIndex(repository => repository.id == id);
+
+      // Imutabilidade
+      const updateRepository = [...repositories];
+      updateRepository.splice(repositoryIndex, 1);
+
+      setRepositories([...updateRepository]);
+    }
   }
 
   return (
     <div>
       <ul data-testid="repository-list">
-        <li>
-          Repositório 1
-
-          <button onClick={() => handleRemoveRepository(1)}>
-            Remover
-          </button>
-        </li>
+        {repositories.map(repository => 
+            <li key={repository.id}>
+              {repository.title}
+              <button onClick={() => handleRemoveRepository(repository.id)}>
+                Remover
+              </button>
+            </li>  
+        )}
       </ul>
 
       <button onClick={handleAddRepository}>Adicionar</button>
