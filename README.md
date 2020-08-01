@@ -31,7 +31,7 @@ irá atuar como um cliente front-end da API criada no [desafio 02](https://githu
 
 A figura a seguir apresenta a aplicação:
 
-<h6 align="center"> Figura 01 - Aplicação mobile </h6>
+<h6 align="center"> Figura 01 - Aplicação web </h6>
 <p align="center">
   <img src="" /> 
   </br>
